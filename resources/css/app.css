@@ -1,5 +1,144 @@
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root { 
+    --swiss-red: #E60000; 
+    --dark-bg: #030303; 
+    --card-bg: #0a0a0a; 
+    --glass: rgba(5, 5, 5, 0.6); 
+}
+
+/* --- Reset Global pour supprimer le rectangle blanc --- */
+html, body {
+    background-color: var(--dark-bg) !important;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Texture de grain sur tout le site */
+body::before {
+    content: ""; position: fixed; inset: 0;
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    opacity: 0.04; z-index: 9999; pointer-events: none;
+}
+
+.mesh-gradient {
+    position: fixed; inset: 0;
+    background: radial-gradient(at 0% 0%, rgba(230, 0, 0, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(230, 0, 0, 0.05) 0px, transparent 50%);
+    filter: blur(80px); z-index: 0; pointer-events: none;
+}
+
+.grid-overlay {
+    position: fixed; inset: 0;
+    background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 50px 50px; z-index: 1; pointer-events: none;
+}
+
+/* --- Navigation Floating Glass --- */
+#navbar {
+    position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
+    width: 95%; max-width: 1200px; height: 65px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.5rem; border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--glass); 
+    
+    /* Correction Backdrop Filter (Remplacé backdrop-blur par backdrop-filter) */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    
+    z-index: 100; transition: all 0.5s ease;
+}
+
+@media (min-width: 768px) {
+    #navbar { top: 1.5rem; padding: 0 2.5rem; height: 75px; }
+    #navbar.scrolled { 
+        top: 0.75rem; width: 90%; height: 65px; 
+        background: rgba(0, 0, 0, 0.95); 
+        border-color: rgba(230, 0, 0, 0.4); 
+    }
+}
+
+/* --- Hero & Typography --- */
+.video-background {
+    position: absolute; right: -10%; width: 100vw; height: auto;
+    aspect-ratio: 1/1; object-fit: contain; z-index: 0; opacity: 0.6;
+    filter: contrast(1.1) brightness(0.8);
+    mask-image: radial-gradient(circle at center, black 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 75%);
+    transform: scale(1.05); /* Cache légèrement le logo Runway */
+}
+
+@media (min-width: 1024px) { .video-background { width: 65vw; right: -5%; opacity: 1; } }
+
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, #030303 30%, rgba(3,3,3,0.7) 60%, transparent 100%); z-index: 1; pointer-events: none; }
+.hero-title { font-size: clamp(2.5rem, 8vw, 8rem); line-height: 1; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 2rem; }
+.text-glow-red { color: var(--swiss-red); text-shadow: 0 0 30px rgba(230, 0, 0, 0.5); }
+
+/* --- Slider & Cards --- */
+.swiper { width: 100%; padding-top: 40px; padding-bottom: 40px; }
+.swiper-slide { width: 280px; height: 380px; transition: all 0.5s ease; }
+@media (min-width: 768px) { .swiper-slide { width: 320px; height: 420px; } }
+
+.service-card {
+    background: #0d0d0d; border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2.5rem 1.5rem; height: 100%; border-radius: 24px;
+    display: flex; flex-direction: column; justify-content: center;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    filter: grayscale(1) blur(2px); opacity: 0.3; transform: scale(0.8);
+}
+
+.swiper-slide-active .service-card { 
+    filter: grayscale(0) blur(0px); opacity: 1; 
+    transform: scale(1.05); border-color: var(--swiss-red); 
+    background: #111; box-shadow: 0 20px 50px rgba(230, 0, 0, 0.2); 
+}
+
+.nav-btn { 
+    width: 50px; height: 50px; border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 50%; display: flex; align-items: center; 
+    justify-content: center; cursor: pointer; background: rgba(255, 255, 255, 0.03); 
+    transition: all 0.4s ease; color: white;
+}
+@media (min-width: 768px) { .nav-btn { width: 65px; height: 65px; } }
+.nav-btn:hover { background: var(--swiss-red); border-color: var(--swiss-red); box-shadow: 0 0 20px rgba(230, 0, 0, 0.4); }
+
+/* --- Bento Grid Responsive --- */
+.bento-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 768px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .bento-main { grid-column: span 2; }
+    .bento-wide { grid-column: span 2; }
+}
+@media (min-width: 1024px) {
+    .bento-grid { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 220px); }
+    .bento-main { grid-row: span 2; grid-column: span 2; }
+}
+.bento-item { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 2rem; position: relative; overflow: hidden; }
+
+/* --- Contact Form & Input Disparition --- */
+.input-group { position: relative; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 2.5rem; transition: all 0.4s ease; }
+.input-group:focus-within { border-bottom-color: var(--swiss-red); }
+.input-field { width: 100%; background: transparent; border: none; padding: 1.5rem 0 0.5rem 0; color: white; outline: none; font-family: 'Inter', sans-serif; }
+.input-label { position: absolute; left: 0; top: 1.5rem; pointer-events: none; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.4); transition: all 0.2s ease-in-out; }
+
+/* Effet Disparition Label au Focus */
+.input-field:focus + .input-label, .input-field:not(:placeholder-shown) + .input-label { transform: translateY(-0.5rem); opacity: 0; visibility: hidden; }
+
+.btn-swiss { background-color: var(--swiss-red); color: white; padding: 1rem 2rem; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; display: inline-flex; align-items: center; gap: 1rem; border: none; width: 100%; justify-content: center; cursor: pointer; transition: 0.4s; }
+@media (min-width: 768px) { .btn-swiss { width: auto; } }
+.btn-swiss:hover { box-shadow: 0 0 30px rgba(230, 0, 0, 0.4); transform: translateY(-2px); }
+
+/* --- Mouse Glow Effect --- */
+.glow-card { position: relative; z-index: 1; }
+.glow-card::after { 
+    content: ""; position: absolute; inset: 0; 
+    background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(230, 0, 0, 0.12), transparent 40%); 
+    z-index: -1; pointer-events: none; 
+}
